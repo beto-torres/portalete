@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; --ink: 8 12 24; --panel: 17 24 43; --primary: 139 92 246; --accent: 6 182 212; }
+:root.light { color-scheme: light; --ink: 241 245 249; --panel: 255 255 255; }
+* { box-sizing: border-box; }
+html { min-width: 320px; }
+body { margin: 0; background: rgb(var(--ink)); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+select option, select optgroup { background-color: rgb(17 24 43); color: rgb(226 232 240); }
+select option:disabled { color: rgb(100 116 139); }
+
+@layer components {
+  .auth-shell { @apply relative grid min-h-screen place-items-center overflow-hidden bg-ink p-4 text-slate-100; background-image: radial-gradient(circle at 20% 10%, rgb(var(--primary)/.15), transparent 30%), radial-gradient(circle at 85% 80%, rgb(var(--accent)/.12), transparent 30%); }
+  .orb { @apply absolute size-80 rounded-full blur-3xl; }
+  .field { @apply min-h-11 w-full rounded-xl border border-white/10 bg-white/[.045] px-3.5 text-base text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-primary/70 focus:ring-2 focus:ring-primary/20; }
+  .field-wrap { @apply flex items-center gap-2 rounded-xl border border-white/10 bg-white/[.045] px-3 text-slate-500 transition focus-within:border-primary/70 focus-within:ring-2 focus-within:ring-primary/20; }
+  .field-wrap .field { @apply border-0 bg-transparent px-1 focus:ring-0; }
+  .field-wrap svg { @apply size-[18px] shrink-0; }
+  .icon-inline { @apply grid size-8 shrink-0 place-items-center text-slate-400 hover:text-white; }
+  .link { @apply font-medium text-violet-400 transition hover:text-violet-300 hover:underline; }
+  .nav-item { @apply flex min-h-12 items-center gap-3 rounded-xl px-4 text-left text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white; }
+  .nav-item.active { @apply bg-gradient-to-r from-primary/25 to-primary/5 text-violet-200 shadow-[inset_3px_0_0_rgb(var(--primary))]; }
+  .icon-button { @apply grid size-10 place-items-center rounded-xl text-slate-400 transition hover:bg-white/[.07] hover:text-white focus:outline-none focus:ring-2 focus:ring-primary; }
+  .icon-button svg { @apply size-[19px]; }
+  .header-popover { @apply absolute top-[calc(100%+.55rem)] z-50 overflow-hidden rounded-xl border border-white/10 bg-panel shadow-panel; }
+  .header-popover > button { @apply flex w-full items-center gap-3 border-b border-white/5 px-4 py-3 text-left text-sm transition last:border-0 hover:bg-white/5; }
+  .header-popover > button strong { @apply block text-sm; }.header-popover > button span { @apply block min-w-0; }.header-popover > button span:not(.notification-dot), .header-popover > button small { @apply mt-0.5 block text-xs text-slate-500; }.header-popover > p { @apply p-4 text-sm text-slate-500; }
+  .notification-dot { @apply absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-red-500 px-1 text-[11px] font-bold leading-5 text-white; }
+  .loading-ring { @apply mx-auto block size-9 animate-spin rounded-full border-[3px] border-white/10 border-t-violet-400; }
+  .hero { @apply relative flex min-h-64 items-center justify-between overflow-hidden rounded-3xl border border-violet-400/20 bg-gradient-to-br from-violet-950/80 via-panel to-cyan-950/50 p-7 shadow-neon sm:p-10; }
+  .hero::after { content:""; @apply absolute -right-16 -top-20 size-64 rounded-full border border-white/10 bg-white/[.025]; }
+  .hero h1 { @apply mt-3 text-3xl font-bold tracking-tight sm:text-4xl; }
+  .hero p { @apply mt-3 max-w-xl text-base leading-7 text-slate-400; }
+  .eyebrow { @apply inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-400/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-violet-300; }
+  .quick-card { @apply flex min-h-40 flex-col items-start rounded-2xl border border-white/10 bg-panel/70 p-5 text-left shadow-panel backdrop-blur-xl transition hover:-translate-y-1 hover:border-violet-400/30 hover:shadow-neon; }
+  .quick-card svg { @apply mb-5 text-violet-400; }.quick-card strong { @apply text-base; }.quick-card span { @apply mt-1 text-sm text-slate-500; }
+  .page-title { @apply text-2xl font-bold tracking-tight sm:text-3xl; }.page-subtitle { @apply mt-2 text-sm text-slate-400 sm:text-base; }
+  .event-card { @apply border-t-4 p-5 transition hover:-translate-y-1; }.event-card h2 { @apply my-4 text-lg font-semibold; }.event-card p { @apply mt-2 flex items-center gap-2 text-sm text-slate-400; }.event-card p svg { @apply size-4 shrink-0 text-violet-400; }.event-card .description { @apply mt-4 block border-t border-white/10 pt-4 leading-6 text-slate-300; }
+  .badge { @apply inline-flex rounded-full px-2.5 py-1 text-xs font-semibold; }
+  .schedule-panel { @apply w-full min-w-0 overflow-hidden border-0 bg-transparent p-0 shadow-none backdrop-blur-none; }
+  .schedule-scroll { @apply w-full overflow-x-auto; scrollbar-gutter: stable; }
+  .schedule-table { @apply w-full min-w-[760px] table-fixed border-separate border-spacing-1 text-sm; }
+  .schedule-table .lesson-column { width: clamp(3.75rem, 5vw, 5.5rem); }
+  .schedule-table th { @apply px-2 py-3 text-center text-slate-400; }
+  .schedule-table td { @apply h-20 rounded-lg border border-white/5 bg-white/[.025] p-3 align-top; width: auto; }
+  .schedule-table td strong { @apply block break-words text-sm leading-5 text-slate-200; }
+  .schedule-table td span { @apply mt-1 block break-words text-xs leading-4 text-slate-500; }
+  @media (min-width: 1280px) { .schedule-table td { @apply h-[5.25rem] p-3.5; } }
+  .tabs { @apply my-6 flex gap-2 overflow-x-auto border-b border-white/10 pb-3; }.tabs button { @apply whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5; }.tabs button.active { @apply bg-primary/15 text-violet-300; }
+  .admin-grid { @apply grid gap-5 xl:grid-cols-[minmax(320px,480px)_1fr]; }.form-title { @apply mb-5 flex items-center gap-2 text-lg font-semibold; }.form-title svg { @apply size-5 text-violet-400; }
+  .calendar-panel .fc { --fc-border-color: rgb(255 255 255 / .08); --fc-page-bg-color: transparent; --fc-neutral-bg-color: rgb(255 255 255 / .04); --fc-today-bg-color: rgb(var(--primary) / .10); }.calendar-panel .fc-button { @apply border-0 bg-primary/80 capitalize shadow-none hover:bg-primary; }.calendar-panel .fc-toolbar-title { @apply text-xl capitalize; }
+}
+
+:root.light body, :root.light .bg-ink { color: #172033; }
+:root.light .text-slate-100, :root.light .text-slate-200, :root.light .text-slate-300 { color: #1e293b; }
+:root.light .text-slate-400, :root.light .text-slate-500 { color: #64748b; }
+:root.light .border-white\/10, :root.light .border-white\/5 { border-color: rgba(15,23,42,.10); }
+:root.light .bg-white\/\[\.03\], :root.light .bg-white\/\[\.025\], :root.light .bg-white\/\[\.04\], :root.light .bg-white\/\[\.045\], :root.light .bg-white\/5 { background-color: rgba(15,23,42,.035); }
+:root.light .field, :root.light .field-wrap { color: #172033; border-color: rgba(15,23,42,.12); background: rgba(15,23,42,.03); }
+:root.light select option, :root.light select optgroup { background-color: #fff; color: #172033; }
+:root.light select option:disabled { color: #94a3b8; }
+:root.light .field::placeholder { color: #94a3b8; }
+:root.light .sidebar-shell { box-shadow: 10px 0 35px rgba(15,23,42,.05); }
+:root.light .nav-item:hover, :root.light .icon-button:hover { background: rgba(15,23,42,.05); color: #0f172a; }
+:root.light .hero { background: linear-gradient(135deg, rgba(237,233,254,.95), rgba(255,255,255,.95), rgba(207,250,254,.8)); }
+:root.light .hero p { color: #64748b; }
+:root.light .profile-avatar { border-color: rgb(var(--panel)); }
+:root.light .calendar-panel .fc { --fc-border-color: rgba(15,23,42,.1); --fc-neutral-bg-color: rgba(15,23,42,.04); }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }

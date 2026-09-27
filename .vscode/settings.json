@@ -1,0 +1,30 @@
+{
+  // Concede confiança total ao workspace atual
+  "security.workspace.trust.enabled": true,
+
+  // Permissões comuns de automação para ferramentas do VS Code
+  "chat.tools.terminal.autoApprove": {
+    "enable": true
+  },
+  "chat.tools.fileSystem.autoApprove": {
+    "enable": true
+  },
+
+  // Exemplo de configurações para a ferramenta/extensão
+  "antigravity.autoApprove": {
+    "readFiles": true,
+    "writeFiles": true,
+    "createFiles": true,
+    "deleteFiles": false,
+    "terminalCommands": false
+  },
+
+  // Whitelist para comandos de terminal sem pedir autorização repetida
+  "antigravity.allowedCommands": [
+    "npm run build",
+    "npm test",
+    "git status",
+    "git diff",
+    "pytest"
+  ]
+}
