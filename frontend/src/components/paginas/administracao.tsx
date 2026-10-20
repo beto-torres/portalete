@@ -475,6 +475,19 @@ function AdminSchedule({
   setSchedule: Dispatch<SetStateAction<ScheduleItem[]>>;
 }) {
   const [message, setMessage] = useState("");
+  const [disciplina, setDisciplina] = useState("");
+  const [professor, setProfessor] = useState("");
+  const [turma, setTurma] = useState("");
+  const opcoes = (campo: "subject" | "teacher" | "className") =>
+    [...new Set(schedule.map((item) => item[campo]))].sort((a, b) =>
+      a.localeCompare(b, "pt-BR", { numeric: true }),
+    );
+  const aulasFiltradas = schedule.filter(
+    (item) =>
+      (!disciplina || item.subject === disciplina) &&
+      (!professor || item.teacher === professor) &&
+      (!turma || item.className === turma),
+  );
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
@@ -557,8 +570,49 @@ function AdminSchedule({
       <Records
         title="Aulas cadastradas"
         gridClassName="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
+        filters={
+          <div className="mb-5 grid gap-3">
+            <div className="grid gap-3 sm:grid-cols-3">
+              <Field label="Disciplina">
+                <Select value={disciplina} onChange={(e) => setDisciplina(e.target.value)}>
+                  <option value="">Todas as disciplinas</option>
+                  {opcoes("subject").map((value) => <option key={value} value={value}>{value}</option>)}
+                </Select>
+              </Field>
+              <Field label="Professor">
+                <Select value={professor} onChange={(e) => setProfessor(e.target.value)}>
+                  <option value="">Todos os professores</option>
+                  {opcoes("teacher").map((value) => <option key={value} value={value}>{value}</option>)}
+                </Select>
+              </Field>
+              <Field label="Turma">
+                <Select value={turma} onChange={(e) => setTurma(e.target.value)}>
+                  <option value="">Todas as turmas</option>
+                  {opcoes("className").map((value) => <option key={value} value={value}>{value}</option>)}
+                </Select>
+              </Field>
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+              <p role="status" className="text-slate-400">
+                {aulasFiltradas.length} de {schedule.length} aulas
+              </p>
+              {(disciplina || professor || turma) && (
+                <button type="button" className="link" onClick={() => {
+                  setDisciplina("");
+                  setProfessor("");
+                  setTurma("");
+                }}>Limpar filtros</button>
+              )}
+            </div>
+          </div>
+        }
       >
-        {schedule.map((item) => (
+        {aulasFiltradas.length === 0 && (
+          <p className="col-span-full py-6 text-center text-sm text-slate-400">
+            {schedule.length === 0 ? "Nenhuma aula cadastrada." : "Nenhuma aula encontrada para os filtros selecionados."}
+          </p>
+        )}
+        {aulasFiltradas.map((item) => (
           <Record
             key={item.id}
             title={item.subject}
@@ -766,14 +820,17 @@ function Records({
   title,
   children,
   gridClassName = "",
+  filters,
 }: {
   title: string;
   children: React.ReactNode;
   gridClassName?: string;
+  filters?: React.ReactNode;
 }) {
   return (
     <Panel className="p-5">
       <h2 className="form-title">{title}</h2>
+      {filters}
       <div className={`grid gap-3 ${gridClassName}`}>{children}</div>
     </Panel>
   );
