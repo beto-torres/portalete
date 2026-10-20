@@ -49,7 +49,7 @@ select option:disabled { color: rgb(100 116 139); }
   .schedule-table td strong { @apply block break-words text-sm leading-5 text-slate-200; }
   .schedule-table td span { @apply mt-1 block break-words text-xs leading-4 text-slate-500; }
   @media (min-width: 1280px) { .schedule-table td { @apply h-[5.25rem] p-3.5; } }
-  .tabs { @apply my-6 flex gap-2 overflow-x-auto border-b border-white/10 pb-3; }.tabs button { @apply whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5; }.tabs button.active { @apply bg-primary/15 text-violet-300; }
+  .tabs { @apply my-6 flex gap-2 overflow-x-auto border-b border-white/10 px-1.5 pt-1.5 pb-3; }.tabs button { @apply shrink-0 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5; }.tabs button.active { @apply bg-primary/15 text-violet-300; }
   .admin-grid { @apply grid gap-5 xl:grid-cols-[minmax(320px,480px)_1fr]; }.form-title { @apply mb-5 flex items-center gap-2 text-lg font-semibold; }.form-title svg { @apply size-5 text-violet-400; }
   .calendar-panel .fc { --fc-border-color: rgb(255 255 255 / .08); --fc-page-bg-color: transparent; --fc-neutral-bg-color: rgb(255 255 255 / .04); --fc-today-bg-color: rgb(var(--primary) / .10); }.calendar-panel .fc-button { @apply border-0 bg-primary/80 capitalize shadow-none hover:bg-primary; }.calendar-panel .fc-toolbar-title { @apply text-xl capitalize; }
 }
