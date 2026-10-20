@@ -9,6 +9,8 @@ import { usePortal } from "@/contexts/portal-context";
 import type { AcademicStructure, Role, User } from "@/types";
 import { Button, EmptyState, Field, Input, Panel, Select } from "../ui";
 
+const USERS_PER_PAGE = 2;
+
 export function AdminUsuarios() {
   const { user: currentUser, updateUser } = usePortal();
   const [users, setUsers] = useState<User[]>([]);
@@ -53,8 +55,9 @@ export function AdminUsuarios() {
         .toLocaleLowerCase("pt-BR")
         .includes(search.toLocaleLowerCase("pt-BR")),
   );
-  const pages = Math.max(1, Math.ceil(filtered.length / 10));
+  const pages = Math.max(1, Math.ceil(filtered.length / USERS_PER_PAGE));
   const activePage = Math.min(page, pages);
+  const firstUser = (activePage - 1) * USERS_PER_PAGE;
 
   function edit(item: User | null) {
     setEditing(item);
@@ -263,71 +266,84 @@ export function AdminUsuarios() {
           <p className="text-sm text-slate-400">
             {filtered.length} usuário(s) encontrado(s)
           </p>
-          {filtered
-            .slice((activePage - 1) * 10, activePage * 10)
-            .map((item) => (
-              <Panel
-                key={item.id}
-                className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center"
-              >
-                <div className="min-w-0 flex-1">
-                  <h3 className="break-words font-semibold">
-                    {item.name}
-                    {item.id === currentUser.id && " (você)"}
-                  </h3>
-                  <p className="break-all text-sm text-slate-400">
-                    {item.email}
-                  </p>
-                  <p className="text-sm">
-                    {roleNames[item.role]}
-                    {item.className && ` • ${item.className}`}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    disabled={busy}
-                    onClick={() => edit(item)}
-                    aria-label={`Consultar e editar ${item.name}`}
-                  >
-                    Consultar / editar
-                  </Button>
-                  <Button
-                    className="bg-red-500/10 text-red-300"
-                    disabled={busy || item.id === currentUser.id}
-                    onClick={() => void remove(item)}
-                    aria-label={`Excluir ${item.name}`}
-                  >
-                    Excluir
-                  </Button>
-                </div>
-              </Panel>
-            ))}
-          {!filtered.length && (
-            <EmptyState
-              title="Nenhum usuário encontrado"
-              text="Ajuste os filtros ou cadastre um novo usuário."
-            />
-          )}
-          {pages > 1 && (
+          <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2">
+            {filtered
+              .slice(firstUser, firstUser + USERS_PER_PAGE)
+              .map((item) => (
+                <Panel
+                  key={item.id}
+                  className="flex min-w-0 flex-col gap-4 p-5"
+                >
+                  <div className="min-w-0 flex-1">
+                    <h3 className="break-words font-semibold">
+                      {item.name}
+                      {item.id === currentUser.id && " (você)"}
+                    </h3>
+                    <p className="break-all text-sm text-slate-400">
+                      {item.email}
+                    </p>
+                    <p className="text-sm">
+                      {roleNames[item.role]}
+                      {item.className && ` • ${item.className}`}
+                    </p>
+                  </div>
+                  <div className="mt-auto flex flex-wrap gap-2">
+                    <Button
+                      disabled={busy}
+                      onClick={() => edit(item)}
+                      aria-label={`Consultar e editar ${item.name}`}
+                    >
+                      Consultar / editar
+                    </Button>
+                    <Button
+                      className="bg-red-500/10 text-red-300"
+                      disabled={busy || item.id === currentUser.id}
+                      onClick={() => void remove(item)}
+                      aria-label={`Excluir ${item.name}`}
+                    >
+                      Excluir
+                    </Button>
+                  </div>
+                </Panel>
+              ))}
+            {!filtered.length && (
+              <EmptyState
+                title="Nenhum usuário encontrado"
+                text="Ajuste os filtros ou cadastre um novo usuário."
+              />
+            )}
+          </div>
+          {filtered.length > 0 && (
             <nav
-              className="flex items-center justify-center gap-3"
+              className="flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-4 sm:flex-row"
               aria-label="Paginação de usuários"
             >
-              <Button
-                disabled={activePage === 1}
-                onClick={() => setPage(activePage - 1)}
+              <p
+                className="text-sm text-slate-400"
+                role="status"
+                aria-live="polite"
               >
-                Anterior
-              </Button>
-              <span>
-                {activePage} de {pages}
-              </span>
-              <Button
-                disabled={activePage === pages}
-                onClick={() => setPage(activePage + 1)}
-              >
-                Próxima
-              </Button>
+                Exibindo {firstUser + 1}–
+                {Math.min(firstUser + USERS_PER_PAGE, filtered.length)} de{" "}
+                {filtered.length} usuários
+              </p>
+              <div className="flex items-center gap-3">
+                <Button
+                  disabled={activePage === 1}
+                  onClick={() => setPage(activePage - 1)}
+                >
+                  Anterior
+                </Button>
+                <span>
+                  Página {activePage} de {pages}
+                </span>
+                <Button
+                  disabled={activePage === pages}
+                  onClick={() => setPage(activePage + 1)}
+                >
+                  Próxima
+                </Button>
+              </div>
             </nav>
           )}
         </>
