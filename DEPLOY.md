@@ -1,6 +1,6 @@
 # PortalETE na Vercel e Neon
 
-O frontend Next.js usa o projeto Vercel `portalete`; a API NestJS usa `portalete-api`. O banco permanece no projeto Neon `portalete` (PostgreSQL 16, aws-us-east-1). Render não é necessário.
+O frontend Next.js usa o projeto Vercel `portalete`; a API NestJS usa `portalete-api`. O banco permanece no projeto Neon `portalete` (PostgreSQL 16, aws-us-east-1).
 
 ## API
 

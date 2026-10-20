@@ -1,6 +1,8 @@
 # Estrutura e execução do ambiente
 
-Este repositório utiliza uma arquitetura dividida em três serviços executados por meio do Docker Compose:
+Em produção, o frontend e a API estão hospedados na Vercel, com PostgreSQL no Neon. As configurações e instruções de publicação estão em [DEPLOY.md](DEPLOY.md).
+
+Para desenvolvimento local com Docker Compose, este repositório utiliza três serviços:
 
 - `frontend`: interface web desenvolvida com Next.js e React, disponível na porta `3000`.
 - `api`: API REST desenvolvida com NestJS, disponível na porta `3001` e com rotas sob o prefixo `/api`.
@@ -69,9 +71,9 @@ portalete/
 └── README.md
 ```
 
-## Pré-requisito obrigatório
+## Pré-requisito para o ambiente local com Docker
 
-O projeto necessita do **Docker** para funcionar.
+O ambiente local descrito abaixo necessita do **Docker**. A hospedagem em produção na Vercel e no Neon independe desses contêineres.
 
 Instale uma das opções abaixo:
 
