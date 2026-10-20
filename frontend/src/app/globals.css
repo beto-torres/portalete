@@ -81,26 +81,32 @@ select option:disabled { color: rgb(100 116 139); }
   cursor: pointer;
 }
 @media (hover: hover) {
-  :is(button, a[href], [role="button"]):not(:disabled):not([aria-disabled="true"]):hover {
+  :is(button, a[href], [role="button"]):not(.footer-link):not(:disabled):not([aria-disabled="true"]):hover {
     outline: 2px solid rgb(var(--interaction-outline) / .75);
     outline-offset: 2px;
   }
-  a[href]:not([aria-disabled="true"]):hover {
+  a[href]:not(.footer-link):not([aria-disabled="true"]):hover {
     text-decoration: underline;
     text-underline-offset: 4px;
   }
 }
-:is(button, a[href], [role="button"]):not(:disabled):not([aria-disabled="true"]):focus-visible {
+:is(button, a[href], [role="button"]):not(.footer-link):not(:disabled):not([aria-disabled="true"]):focus-visible {
   outline: 3px solid rgb(var(--interaction-outline));
   outline-offset: 3px;
 }
-:is(button, a[href], [role="button"]):not(:disabled):not([aria-disabled="true"]):active {
+:is(button, a[href], [role="button"]):not(.footer-link):not(:disabled):not([aria-disabled="true"]):active {
   outline: 3px solid rgb(var(--interaction-outline));
   outline-offset: 1px;
   filter: brightness(.9);
 }
 :is(button, a[href], [role="button"]):is(:disabled, [aria-disabled="true"]) {
   cursor: not-allowed;
+}
+.footer-link:focus-visible {
+  outline: none;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
