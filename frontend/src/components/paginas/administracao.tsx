@@ -11,6 +11,7 @@ import { Check, Clock3, PencilLine, Plus, Trash2, X } from "lucide-react";
 import { toast } from "react-toastify";
 import { classes, roleNames, teachers } from "@/lib/data";
 import { api } from "@/lib/api";
+import { AdminUsuarios } from "./admin-usuarios";
 import { confirmarComToast } from "@/lib/confirmar-com-toast";
 import type {
   Countdown,
@@ -44,7 +45,7 @@ type Props = {
 
 export function PaginaAdministracao(props: Props) {
   const [tab, setTab] = useState<
-    "events" | "schedule" | "countdowns" | "suggestions" | "passwords"
+    "events" | "schedule" | "countdowns" | "suggestions" | "passwords" | "users"
   >("events");
   const allowed =
     props.role === "admin"
@@ -54,6 +55,7 @@ export function PaginaAdministracao(props: Props) {
           "countdowns",
           "suggestions",
           "passwords",
+          "users",
         ] as const)
       : (["events"] as const);
   const labels = {
@@ -62,6 +64,7 @@ export function PaginaAdministracao(props: Props) {
     countdowns: "Contagens",
     suggestions: "Sugestões",
     passwords: "Renovação de senhas",
+    users: "Usuários",
   } as const;
   return (
     <div>
@@ -102,6 +105,7 @@ export function PaginaAdministracao(props: Props) {
         />
       )}{" "}
       {tab === "passwords" && <AdminPasswordRequests />}
+      {tab === "users" && props.role === "admin" && <AdminUsuarios />}
     </div>
   );
 }
@@ -574,21 +578,42 @@ function AdminSchedule({
           <div className="mb-5 grid gap-3">
             <div className="grid gap-3 sm:grid-cols-3">
               <Field label="Disciplina">
-                <Select value={disciplina} onChange={(e) => setDisciplina(e.target.value)}>
+                <Select
+                  value={disciplina}
+                  onChange={(e) => setDisciplina(e.target.value)}
+                >
                   <option value="">Todas as disciplinas</option>
-                  {opcoes("subject").map((value) => <option key={value} value={value}>{value}</option>)}
+                  {opcoes("subject").map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
                 </Select>
               </Field>
               <Field label="Professor">
-                <Select value={professor} onChange={(e) => setProfessor(e.target.value)}>
+                <Select
+                  value={professor}
+                  onChange={(e) => setProfessor(e.target.value)}
+                >
                   <option value="">Todos os professores</option>
-                  {opcoes("teacher").map((value) => <option key={value} value={value}>{value}</option>)}
+                  {opcoes("teacher").map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
                 </Select>
               </Field>
               <Field label="Turma">
-                <Select value={turma} onChange={(e) => setTurma(e.target.value)}>
+                <Select
+                  value={turma}
+                  onChange={(e) => setTurma(e.target.value)}
+                >
                   <option value="">Todas as turmas</option>
-                  {opcoes("className").map((value) => <option key={value} value={value}>{value}</option>)}
+                  {opcoes("className").map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
                 </Select>
               </Field>
             </div>
@@ -597,11 +622,17 @@ function AdminSchedule({
                 {aulasFiltradas.length} de {schedule.length} aulas
               </p>
               {(disciplina || professor || turma) && (
-                <button type="button" className="link" onClick={() => {
-                  setDisciplina("");
-                  setProfessor("");
-                  setTurma("");
-                }}>Limpar filtros</button>
+                <button
+                  type="button"
+                  className="link"
+                  onClick={() => {
+                    setDisciplina("");
+                    setProfessor("");
+                    setTurma("");
+                  }}
+                >
+                  Limpar filtros
+                </button>
               )}
             </div>
           </div>
@@ -609,7 +640,9 @@ function AdminSchedule({
       >
         {aulasFiltradas.length === 0 && (
           <p className="col-span-full py-6 text-center text-sm text-slate-400">
-            {schedule.length === 0 ? "Nenhuma aula cadastrada." : "Nenhuma aula encontrada para os filtros selecionados."}
+            {schedule.length === 0
+              ? "Nenhuma aula cadastrada."
+              : "Nenhuma aula encontrada para os filtros selecionados."}
           </p>
         )}
         {aulasFiltradas.map((item) => (

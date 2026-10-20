@@ -14,6 +14,7 @@ import { In, Repository } from 'typeorm';
 import { randomInt } from 'crypto';
 import * as bcrypt from 'bcryptjs';
 import { User } from './usuario.entity';
+import { CriarUsuarioDto, EditarUsuarioDto } from './usuarios.dto';
 import {
   AtualizarPerfilDto,
   LoginDto,
@@ -228,6 +229,66 @@ export class AuthService implements OnModuleInit {
     });
     if (!user) throw new NotFoundException('Usuário não encontrado.');
     return this.buildSafeUser(user);
+  }
+
+  async listarUsuarios() {
+    const users = await this.users.find({ relations: ['course', 'grade', 'classGroup'], order: { name: 'ASC' } });
+    return users.map((user) => this.buildSafeUser(user));
+  }
+
+  async salvarUsuario(dto: CriarUsuarioDto | EditarUsuarioDto, id?: string, actorId?: string) {
+    try {
+      return await this.users.manager.transaction(async (manager) => {
+        const repository = manager.getRepository(User);
+        // Serializa alterações administrativas, inclusive rebaixamentos concorrentes.
+        await repository.createQueryBuilder('user').setLock('pessimistic_write').where('user.role = :role', { role: Role.ADMIN }).getMany();
+        const user = id ? await repository.findOneBy({ id }) : repository.create();
+        if (!user) throw new NotFoundException('Usuário não encontrado.');
+        const role = dto.role ?? user.role;
+        if (id && id === actorId && role !== Role.ADMIN) throw new BadRequestException('Você não pode remover seu próprio perfil de administrador.');
+        if (user.role === Role.ADMIN && role !== Role.ADMIN && await repository.countBy({ role: Role.ADMIN }) <= 1) {
+          throw new BadRequestException('O portal precisa manter pelo menos um administrador.');
+        }
+        if (dto.name !== undefined) user.name = dto.name.trim();
+        if (dto.email !== undefined) {
+          const email = dto.email.trim().toLowerCase();
+          const existing = await repository.findOneBy({ email });
+          if (existing && existing.id !== id) throw new ConflictException('E-mail já cadastrado.');
+          user.email = email;
+        }
+        if (dto.password !== undefined) {
+          user.passwordHash = await bcrypt.hash(dto.password, 10);
+          if (id) await manager.getRepository(SolicitacaoRedefinicaoSenha).delete({ usuarioId: id });
+        }
+        user.role = role;
+        if (role !== Role.STUDENT || dto.classGroupId === null) {
+          user.courseId = null; user.gradeId = null; user.classGroupId = null;
+        } else if (dto.classGroupId !== undefined) {
+          const group = await manager.getRepository(ClassGroup).findOneBy({ id: dto.classGroupId });
+          if (!group) throw new BadRequestException('Turma não encontrada.');
+          user.courseId = group.courseId; user.gradeId = group.gradeId; user.classGroupId = group.id;
+        }
+        await repository.save(user);
+        const saved = await repository.findOneOrFail({ where: { id: user.id }, relations: ['course', 'grade', 'classGroup'] });
+        return this.buildSafeUser(saved);
+      });
+    } catch (error: unknown) {
+      if (typeof error === 'object' && error !== null && 'code' in error && error.code === '23505') throw new ConflictException('E-mail já cadastrado.');
+      throw error;
+    }
+  }
+
+  async excluirUsuario(id: string, actorId: string) {
+    if (id === actorId) throw new BadRequestException('Você não pode excluir sua própria conta.');
+    return this.users.manager.transaction(async (manager) => {
+      const repository = manager.getRepository(User);
+      await repository.createQueryBuilder('user').setLock('pessimistic_write').where('user.role = :role', { role: Role.ADMIN }).getMany();
+      const user = await repository.findOneBy({ id });
+      if (!user) throw new NotFoundException('Usuário não encontrado.');
+      if (user.role === Role.ADMIN && await repository.countBy({ role: Role.ADMIN }) <= 1) throw new BadRequestException('O portal precisa manter pelo menos um administrador.');
+      await repository.delete(id);
+      return { success: true };
+    });
   }
 
   async atualizarPerfil(userId: string, dto: AtualizarPerfilDto) {

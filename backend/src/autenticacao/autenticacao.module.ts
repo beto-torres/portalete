@@ -7,6 +7,7 @@ import { User } from './usuario.entity';
 import { SolicitacaoRedefinicaoSenha } from './recuperacao-senha.entity';
 import { ClassGroup, Course, SchoolGrade } from '../escola/escola.entity';
 import { AuthController } from './autenticacao.controller';
+import { UsuariosController } from './usuarios.controller';
 import { AuthService } from './autenticacao.service';
 import { AuthGuard, RolesGuard } from '../comum/autenticacao';
 
@@ -27,7 +28,7 @@ import { AuthGuard, RolesGuard } from '../comum/autenticacao';
       }),
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, UsuariosController],
   providers: [
     AuthService,
     { provide: APP_GUARD, useClass: AuthGuard },

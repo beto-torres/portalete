@@ -11,6 +11,7 @@ import type {
   Suggestion,
   SuggestionStatus,
   User,
+  Role,
 } from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
@@ -57,7 +58,26 @@ export interface Session {
   user: User;
 }
 
+export interface UserInput {
+  name: string;
+  email: string;
+  role: Role;
+  password?: string;
+  classGroupId: string | null;
+}
+
 export const api = {
+  users: () => request<User[]>("/users"),
+  user: (id: string) => request<User>(`/users/${id}`),
+  createUser: (data: UserInput & { password: string }) =>
+    request<User>("/users", { method: "POST", body: JSON.stringify(data) }),
+  updateUser: (id: string, data: UserInput) =>
+    request<User>(`/users/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteUser: (id: string) =>
+    request<{ success: boolean }>(`/users/${id}`, { method: "DELETE" }),
   clearLegacyLocalCache() {
     clearPortalOperationalData(localStorage);
   },
