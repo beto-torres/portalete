@@ -69,4 +69,38 @@ select option:disabled { color: rgb(100 116 139); }
 :root.light .hero p { color: #64748b; }
 :root.light .profile-avatar { border-color: rgb(var(--panel)); }
 :root.light .calendar-panel .fc { --fc-border-color: rgba(15,23,42,.1); --fc-neutral-bg-color: rgba(15,23,42,.04); }
+
+/* Feedback compartilhado por links, botões, menus e controles do calendário. */
+:root { --interaction-outline: 167 139 250; }
+:root.light { --interaction-outline: 109 40 217; }
+:where(button, a[href], [role="button"]) {
+  -webkit-tap-highlight-color: rgb(var(--interaction-outline) / .25);
+  transition: outline-color 150ms ease, filter 150ms ease;
+}
+:is(button, a[href], [role="button"]):not(:disabled):not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+@media (hover: hover) {
+  :is(button, a[href], [role="button"]):not(:disabled):not([aria-disabled="true"]):hover {
+    outline: 2px solid rgb(var(--interaction-outline) / .75);
+    outline-offset: 2px;
+  }
+  a[href]:not([aria-disabled="true"]):hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+:is(button, a[href], [role="button"]):not(:disabled):not([aria-disabled="true"]):focus-visible {
+  outline: 3px solid rgb(var(--interaction-outline));
+  outline-offset: 3px;
+}
+:is(button, a[href], [role="button"]):not(:disabled):not([aria-disabled="true"]):active {
+  outline: 3px solid rgb(var(--interaction-outline));
+  outline-offset: 1px;
+  filter: brightness(.9);
+}
+:is(button, a[href], [role="button"]):is(:disabled, [aria-disabled="true"]) {
+  cursor: not-allowed;
+}
+
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
