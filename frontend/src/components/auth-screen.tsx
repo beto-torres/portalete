@@ -90,11 +90,8 @@ export function AuthScreen({
       const curso = String(data.get("curso") ?? "");
       const serie = String(data.get("serie") ?? "");
       const turma = String(data.get("turma") ?? "");
-      if (
-        (role === "professor" && token !== "@ProfAcesso10") ||
-        (role === "admin" && token !== "@AdmAcesso10")
-      ) {
-        setMessage("Código de autorização inválido.");
+      if (role !== "aluno" && !token.trim()) {
+        setMessage("Informe o código de autorização da equipe escolar.");
         return;
       }
       setBusy(true);
