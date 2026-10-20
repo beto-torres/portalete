@@ -1,0 +1,8 @@
+.deploy
+**/node_modules
+**/dist
+**/.next
+**/.next-dev
+**/.env*
+**/backups
+**/*.tsbuildinfo

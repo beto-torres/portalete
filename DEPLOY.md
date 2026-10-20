@@ -16,7 +16,7 @@ Configure NEXT_PUBLIC_API_URL=https://<dominio-da-api>/api antes do build. Alter
 
 ## Deploy e GitHub
 
-Execute `vercel deploy --prod --yes` em backend e depois em frontend, com cada diretório vinculado ao respectivo projeto. GitHub não é obrigatório para deploy pela CLI. Para deploy automático, conecte beto-torres/portalete aos dois projetos e configure Root Directory como backend e frontend, respectivamente.
+Os dois projetos estão conectados ao repositório beto-torres/portalete, branch main. Um git push nessa branch dispara os deploys. Root Directory: backend para a API e frontend para o site. Para deploy manual, execute a CLI a partir da raiz do repositório, com VERCEL_PROJECT_ID e VERCEL_ORG_ID do projeto desejado; isso permite localizar corretamente a pasta configurada.
 
 Não envie .env*, .deploy/, .vercel/, backups ou node_modules para o GitHub. Os segredos locais ficam em .deploy/, ignorado pelo Git.
 
@@ -25,3 +25,7 @@ Não envie .env*, .deploy/, .vercel/, backups ou node_modules para o GitHub. Os 
 Cadastre o primeiro administrador com ADMIN_REGISTRATION_CODE. Entregue TEACHER_REGISTRATION_CODE somente a professores autorizados. Confira health check, cadastro, login, perfil, notificações e rejeição de códigos inválidos. Revise as regras de visibilidade por perfil antes do uso institucional.
 
 Os planos gratuitos têm cotas e não garantem disponibilidade contínua. Confira os limites efetivos do Neon e o enquadramento no plano Vercel escolhido.
+
+
+URLs de produção: https://portalete.vercel.app e https://portalete-api.vercel.app/api/health. Códigos privados de primeiro cadastro disponíveis localmente em .deploy/primeiro-acesso.txt.
+
