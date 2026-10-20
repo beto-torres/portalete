@@ -1,41 +1,27 @@
-# Publicação do PortalETE
+# PortalETE na Vercel e Neon
 
-## Infraestrutura
+O frontend Next.js usa o projeto Vercel `portalete`; a API NestJS usa `portalete-api`. O banco permanece no projeto Neon `portalete` (PostgreSQL 16, aws-us-east-1). Render não é necessário.
 
-- Banco novo: projeto Neon `portalete`, PostgreSQL 16, região `aws-us-east-1`.
-- API NestJS: Render Free, configuração em `render.yaml`.
-- Frontend Next.js: Vercel, diretório raiz `frontend`.
+## API
 
-## API no Render
+Configure em Production: DATABASE_URL (Neon com sslmode=verify-full), JWT_SECRET (aleatório, mínimo 32 caracteres), ADMIN_REGISTRATION_CODE, TEACHER_REGISTRATION_CODE e FRONTEND_URL (URL HTTPS final do frontend, sem barra final). As credenciais devem ser privadas, sem prefixo NEXT_PUBLIC_.
 
-1. Conecte o repositório `beto-torres/portalete` e crie um Blueprint usando `render.yaml`.
-2. Preencha `DATABASE_URL` com a conexão do novo banco Neon, mantendo TLS habilitado.
-3. Preencha `FRONTEND_URL` com a URL HTTPS de produção do frontend, sem barra final.
-4. O Blueprint gera JWT e códigos aleatórios para cadastro de administrador e professor.
-5. Confira o deploy e `https://<api>.onrender.com/api/health`.
+MIGRATIONS_RUN=false deve ser usado após preparar o banco. NODE_ENV=production e VERCEL=1 são fornecidos pela plataforma. As migrações existentes já foram aplicadas ao banco remoto. Novas migrações devem ser executadas antes de publicar código dependente delas. synchronize fica desligado em produção.
 
-As migrações são executadas na inicialização. Em produção, `synchronize` fica desligado e as contas demonstrativas não são criadas. As migrações existentes incluem estrutura escolar e uma grade inicial de horários; banco novo não significa ausência desses dados iniciais.
+Os dados iniciais de estrutura escolar, horários e grupos de notificações foram preparados antes da publicação. Na Vercel os hooks não repetem essa preparação em cada inicialização. Contas demonstrativas não são criadas em produção.
 
-## Frontend na Vercel
+## Frontend
 
-1. Importe o mesmo repositório, selecionando `frontend` como Root Directory e Next.js como framework.
-2. Configure `NEXT_PUBLIC_API_URL=https://<api>.onrender.com/api` antes do build.
-3. Publique e use a URL resultante como `FRONTEND_URL` no Render.
-4. Ao mudar `NEXT_PUBLIC_API_URL`, refaça o deploy do frontend: essa variável é incorporada no build.
+Configure NEXT_PUBLIC_API_URL=https://<dominio-da-api>/api antes do build. Alterar essa variável exige novo deploy. Configure FRONTEND_URL na API com a URL pública final do frontend.
 
-## Primeiro acesso
+## Deploy e GitHub
 
-Cadastre o primeiro administrador pela tela de cadastro usando o valor de `ADMIN_REGISTRATION_CODE` disponível apenas nas variáveis privadas do Render. Compartilhe `TEACHER_REGISTRATION_CODE` somente com professores autorizados. Alunos continuam com cadastro sem código.
+Execute `vercel deploy --prod --yes` em backend e depois em frontend, com cada diretório vinculado ao respectivo projeto. GitHub não é obrigatório para deploy pela CLI. Para deploy automático, conecte beto-torres/portalete aos dois projetos e configure Root Directory como backend e frontend, respectivamente.
 
-## Verificação
+Não envie .env*, .deploy/, .vercel/, backups ou node_modules para o GitHub. Os segredos locais ficam em .deploy/, ignorado pelo Git.
 
-- Health check da API retorna `{"status":"ok"}`.
-- Cadastro, login e consulta de perfil funcionam com o banco remoto.
-- Cadastro de administrador com código incorreto é rejeitado.
-- Confira calendário, horários, notificações e permissões de cada perfil antes do uso institucional.
+## Primeiro acesso e validação
 
-## Limites e credenciais
+Cadastre o primeiro administrador com ADMIN_REGISTRATION_CODE. Entregue TEACHER_REGISTRATION_CODE somente a professores autorizados. Confira health check, cadastro, login, perfil, notificações e rejeição de códigos inválidos. Revise as regras de visibilidade por perfil antes do uso institucional.
 
-O Render Free suspende a API após inatividade e pode demorar para responder no primeiro acesso. Confirme os limites reais no painel Neon: a conta conectada retornou limite de banco de 512 MiB na criação. A elegibilidade do Vercel Hobby deve ser conferida para uso institucional. Não há garantia de disponibilidade contínua nos planos gratuitos.
-
-Credenciais locais de implantação ficam em `.deploy/`, ignorado pelo Git. Não envie esse diretório ao repositório. Banco local e seus dados foram preservados.
+Os planos gratuitos têm cotas e não garantem disponibilidade contínua. Confira os limites efetivos do Neon e o enquadramento no plano Vercel escolhido.

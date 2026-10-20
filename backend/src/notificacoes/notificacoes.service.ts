@@ -45,6 +45,8 @@ export class NotificacoesService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    // Evita reprocessar todos os eventos/horários a cada inicialização da função.
+    if (process.env.VERCEL === '1') return;
     await this.ensureAcademicGroups();
 
     for (const event of await this.events.find()) {

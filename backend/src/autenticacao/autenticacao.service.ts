@@ -38,6 +38,8 @@ export class AuthService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    // Na Vercel, a estrutura inicial já foi preparada pelas migrações.
+    if (this.config.get<string>('VERCEL') === '1') return;
     // 1. Garantir cursos padrão
     const cursosPadrao = [
       { name: 'Desenvolvimento de Sistemas', acronym: 'DS' },
