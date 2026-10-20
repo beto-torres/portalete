@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import type { User, View } from "@/types";
 import { Sidebar } from "../sidebar";
 import { PortalHeader } from "./portal-header";
+import { ProjectFooter } from "../project-footer";
 
 export function PortalLayout({
   user,
@@ -35,13 +36,13 @@ export function PortalLayout({
         onClose={() => setMenuOpen(false)}
         onLogout={onLogout}
       />
-      <div className="lg:pl-72">
+      <div className="flex min-h-screen flex-col lg:pl-72">
         <PortalHeader
           user={user}
           onOpenMenu={() => setMenuOpen(true)}
           onNavigate={navigate}
         />
-        <main className="mx-auto max-w-[1500px] p-4 sm:p-7 lg:p-9">
+        <main className="mx-auto w-full max-w-[1500px] flex-1 p-4 sm:p-7 lg:p-9">
           {warning && (
             <p
               role="status"
@@ -52,6 +53,7 @@ export function PortalLayout({
           )}
           {children}
         </main>
+        <ProjectFooter />
       </div>
     </div>
   );

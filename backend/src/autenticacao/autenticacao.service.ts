@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { In, Repository } from 'typeorm';
 import { randomInt } from 'crypto';
 import * as bcrypt from 'bcryptjs';
@@ -33,6 +34,7 @@ export class AuthService implements OnModuleInit {
     @InjectRepository(SchoolGrade) private grades: Repository<SchoolGrade>,
     @InjectRepository(ClassGroup) private classGroups: Repository<ClassGroup>,
     private jwt: JwtService,
+    private config: ConfigService,
   ) {}
 
   async onModuleInit() {
@@ -84,6 +86,7 @@ export class AuthService implements OnModuleInit {
     }
 
     // 4. Usuários de demonstração
+    if (this.config.get<string>('NODE_ENV') === 'production') return;
     const turmaAlunoDemo = await this.classGroups.findOne({
       where: { name: '1º DS A' },
       relations: ['course', 'grade'],
@@ -131,9 +134,9 @@ export class AuthService implements OnModuleInit {
             name: item.name,
             email: item.email,
             role: item.role,
-            courseId: (item as any).courseId,
-            gradeId: (item as any).gradeId,
-            classGroupId: (item as any).classGroupId,
+            courseId: item.courseId,
+            gradeId: item.gradeId,
+            classGroupId: item.classGroupId,
             passwordHash: await bcrypt.hash('12345', 8),
           }),
         );
@@ -189,10 +192,10 @@ export class AuthService implements OnModuleInit {
     if (await this.users.findOneBy({ email: dto.email.toLowerCase() })) {
       throw new ConflictException('E-mail já cadastrado.');
     }
-    if (dto.role === Role.TEACHER && dto.authorizationCode !== '@ProfAcesso10') {
+    if (dto.role === Role.TEACHER && dto.authorizationCode !== this.config.get('TEACHER_REGISTRATION_CODE', '@ProfAcesso10')) {
       throw new ForbiddenException('Código de professor inválido.');
     }
-    if (dto.role === Role.ADMIN && dto.authorizationCode !== '@AdmAcesso10') {
+    if (dto.role === Role.ADMIN && dto.authorizationCode !== this.config.get('ADMIN_REGISTRATION_CODE', '@AdmAcesso10')) {
       throw new ForbiddenException('Código de administrador inválido.');
     }
 

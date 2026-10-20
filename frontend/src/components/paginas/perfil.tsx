@@ -72,8 +72,8 @@ export function PaginaPerfil({
           <p className="mt-1 text-slate-400">{roleNames[user.role]} da ETE</p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <Field label="Nome de exibição">
-              <Input name="name" defaultValue={user.name} required />
+            <Field label="Nome do Usuário">
+              <Input name="name" defaultValue={user.name} required disabled />
             </Field>
             <Field label="E-mail institucional">
               <Input value={user.email} readOnly />

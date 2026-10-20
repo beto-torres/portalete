@@ -12,6 +12,7 @@ import {
 import type { Role } from "@/types";
 import { api } from "@/lib/api";
 import { Button, Field, Input, Panel, Select } from "./ui";
+import { ProjectFooter } from "./project-footer";
 
 type Mode = "login" | "register" | "forgot";
 
@@ -153,6 +154,7 @@ export function AuthScreen({
           : "Use o código temporário recebido";
 
   return (
+    <>
     <main className="auth-shell">
       <div className="orb left-[8%] top-[12%] bg-primary/30" />
       <div className="orb bottom-[8%] right-[8%] bg-accent/20" />
@@ -383,5 +385,7 @@ export function AuthScreen({
         </p>
       </Panel>
     </main>
+    <ProjectFooter />
+    </>
   );
 }

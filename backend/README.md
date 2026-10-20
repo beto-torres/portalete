@@ -14,9 +14,9 @@ A API fica em `http://localhost:3001/api` e o PostgreSQL em `localhost:5432`.
 
 Todas usam a senha `12345`:
 
-- Aluno: `aluno@ete.pe.gov.br`
-- Professor: `professor@ete.pe.gov.br`
-- Administrador: `admin@ete.pe.gov.br`
+- Aluno: `aluno@etelimoeiro.com.br`
+- Professor: `professor@etelimoeiro.com.br`
+- Administrador: `admin@etelimoeiro.com.br`
 
 ## Desenvolvimento sem Docker para a API
 
