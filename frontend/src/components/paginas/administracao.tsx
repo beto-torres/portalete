@@ -554,7 +554,10 @@ function AdminSchedule({
           <Button className="bg-primary text-white">Salvar horário</Button>
         </form>
       </Panel>
-      <Records title="Aulas cadastradas">
+      <Records
+        title="Aulas cadastradas"
+        gridClassName="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
+      >
         {schedule.map((item) => (
           <Record
             key={item.id}
@@ -762,14 +765,16 @@ function Message({ text }: { text: string }) {
 function Records({
   title,
   children,
+  gridClassName = "",
 }: {
   title: string;
   children: React.ReactNode;
+  gridClassName?: string;
 }) {
   return (
     <Panel className="p-5">
       <h2 className="form-title">{title}</h2>
-      <div className="grid gap-3">{children}</div>
+      <div className={`grid gap-3 ${gridClassName}`}>{children}</div>
     </Panel>
   );
 }
