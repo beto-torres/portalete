@@ -3,7 +3,7 @@ import { GraduationCap, Instagram, MessageCircle } from "lucide-react";
 
 export function ProjectFooter() {
   const credits = [
-    ["Professor responsável", projectInfo.teacher],
+    ["Professor Responsável", projectInfo.teacher],
     ["Escola", projectInfo.school],
   ];
 
@@ -23,7 +23,7 @@ export function ProjectFooter() {
             </div>
           </div>
           <p className="mt-4 max-w-xs text-sm leading-6">
-            Agenda, horários e serviços para a comunidade escolar.
+            Agenda, horários e serviços escolar.
           </p>
         </div>
         <dl className="grid content-start gap-5 text-sm">
@@ -37,7 +37,7 @@ export function ProjectFooter() {
           ))}
         </dl>
         <div className="min-w-0 border-t border-white/10 pt-5 md:border-l md:border-t-0 md:pl-6 md:pt-0">
-          <h2 className="text-xs font-medium">Fale com a escola</h2>
+          <h2 className="text-xs font-medium">Fale conosco</h2>
           <div className="mt-3 flex flex-col items-start gap-1 text-slate-200">
             <a
               href={`https://www.instagram.com/${projectInfo.instagram}/`}

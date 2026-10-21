@@ -111,7 +111,7 @@ export function PaginaEventos({
             {isAlunoRestrito
               ? `Exibindo eventos abertos à escola e exclusivos da sua turma (${alunoTurma.nomeCompleto}).`
               : isAdmin
-                ? "Visão administrativa com paginação de 6 eventos por página."
+                ? "Visão administrativa."
                 : "Tudo o que acontece na comunidade escolar."}
           </p>
         </div>

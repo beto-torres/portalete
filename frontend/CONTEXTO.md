@@ -8,7 +8,7 @@ Este documento reflete estritamente o código-fonte implementado no repositório
 
 ## 1. Visão Geral e Propósito
 
-O frontend do **Portal ETE** é uma Single Page Application (SPA) responsiva desenvolvida sobre o framework **Next.js** (App Router), projetada para centralizar a rotina acadêmica, pedagógica e de comunicação de uma Escola Técnica Estadual.
+O frontend do **Portal ETE** é uma Single Page Application (SPA) responsiva desenvolvida sobre o framework **Next.js** (App Router), projetada para centralizar a rotina escolar, pedagógica e de comunicação de uma Escola Técnica Estadual.
 
 ### Objetivos do Sistema
 * **Atendimento Multiperfil:** Fornecer interfaces dedicadas e adaptadas para três papéis de usuários: **Alunos**, **Professores** e **Administradores**.
@@ -174,7 +174,7 @@ export type Role = "aluno" | "professor" | "admin";
 // Identificadores de telas/visões do portal
 export type View = "inicio" | "perfil" | "horarios" | "calendario" | "eventos" | "sugestoes" | "admin";
 
-// Estrutura acadêmica institucional
+// Estrutura escolar institucional
 export interface Course {
   id: string;
   name: string;
@@ -462,7 +462,7 @@ Ao realizar alterações ou implementar novos recursos no frontend, observe as s
    * Componentes funcionais utilizam **PascalCase** (`PaginaInicio`, `PaginaEventos`, `PortalHeader`).
    * Tipos e propriedades da API seguem o padrão TypeScript definido em `types/index.ts` (`camelCase`).
 3. **Respeito ao Isolamento Estudantil:**
-   * Qualquer nova tela ou componente que exiba eventos, horários ou informações acadêmicas deve invocar os utilitários `alunoPodeAcessarEvento` e `alunoPodeAcessarHorario` de `@/lib/aluno-acesso` caso o usuário possua papel `aluno`.
+   * Qualquer nova tela ou componente que exiba eventos, horários ou informações escolares deve invocar os utilitários `alunoPodeAcessarEvento` e `alunoPodeAcessarHorario` de `@/lib/aluno-acesso` caso o usuário possua papel `aluno`.
 4. **Respeito ao Design System e Componentes Base:**
    * Utilize as primitivas estilizadas em `@/components/ui`: `Panel`, `Button`, `Input`, `Select`, `Textarea`, `Field` e `EmptyState`.
    * Evite criar caixas ou botões do zero sem utilizar as classes utilitárias ou os componentes compartilhados.
@@ -490,7 +490,7 @@ Ao realizar alterações ou implementar novos recursos no frontend, observe as s
 
 ### 12.2. Funcionalidades Parcialmente Implementadas / Observações Técnicas
 * **Busca Global no Header:** O campo de pesquisa no `PortalHeader` realiza busca navegacional entre as seções e telas do portal (ex.: "Horários", "Meu perfil", "Eventos"), mas não faz busca textual profunda dentro do conteúdo dos eventos ou disciplinas da grade horária.
-* **Atualização de Perfil:** A tela `/portal/perfil` permite atualizar o nome do usuário (`name`). A alteração de vínculos acadêmicos (curso, série, turma) é intencionalmente restrita para alunos (exibida como somente leitura com ícone de cadeado).
+* **Atualização de Perfil:** A tela `/portal/perfil` permite atualizar o nome do usuário (`name`). A alteração de vínculos escolares (curso, série, turma) é intencionalmente restrita para alunos (exibida como somente leitura com ícone de cadeado).
 
 ### 12.3. Funcionalidades Não Implementadas / Planejadas
 * **Upload de Imagens de Eventos / Banners:** O formulário de eventos aceita cor e link externo, mas não possui campo de upload para anexar imagens personalizadas de divulgação.

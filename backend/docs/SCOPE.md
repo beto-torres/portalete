@@ -6,7 +6,7 @@ Documento oficial de especificação de escopo, arquitetura, módulos funcionais
 
 ## 1. Visão Geral e Propósito
 
-O backend do **Portal ETE** é uma API REST desenvolvida para centralizar a gestão pedagógica, institucional e de comunicação de uma Escola Técnica Estadual. Sua responsabilidade central é fornecer serviços seguros, escaláveis e de alta integridade relacional para autenticação, controle acadêmico, mural de eventos, grade horária de aulas, contagens regressivas, ouvidoria estudantil e notificações segmentadas por turma.
+O backend do **Portal ETE** é uma API REST desenvolvida para centralizar a gestão pedagógica, institucional e de comunicação de uma Escola Técnica Estadual. Sua responsabilidade central é fornecer serviços seguros, escaláveis e de alta integridade relacional para autenticação, controle escolar, mural de eventos, grade horária de aulas, contagens regressivas, ouvidoria estudantil e notificações segmentadas por turma.
 
 ### Objetivos Principais
 * **Isolamento e Pertencimento Estudantil:** Garantir que alunos acessem com precisão os dados pertinentes ao seu curso, série e turma (como horários e eventos exclusivos), sem perder a visibilidade de eventos gerais da escola.
@@ -66,17 +66,17 @@ O sistema é dividido em três domínios funcionais coesos:
   * Cadastro de perfis privilegiados (`professor` e `admin`) mediante apresentação de código de autorização institucional fixado (`@ProfAcesso10` para docentes e `@AdmAcesso10` para administradores).
 * **Autenticação e Sessão (`LoginDto`):**
   * Emissão de token JWT assinado contendo `id`, `email` e `role`.
-  * Endpoint de identificação do usuário corrente (`GET /api/auth/me`) com resolução de relações acadêmicas (curso, série e turma vinculados).
+  * Endpoint de identificação do usuário corrente (`GET /api/auth/me`) com resolução de relações escolares (curso, série e turma vinculados).
 * **Recuperação e Redefinição de Senha:**
   * Solicitação aberta com justificativa (`POST /api/auth/recuperacao/solicitacoes`).
   * Fila administrativa de auditoria e aprovação (`GET` e `PATCH /api/auth/recuperacao/solicitacoes/:id/aprovar`).
   * Emissão de código alfanumérico seguro (6 caracteres) com validade de 24 horas.
   * Conclusão da troca de senha validada pelo código (`POST /api/auth/recuperacao/redefinir`).
 * **Atualização de Perfil:**
-  * Permite ajuste de nome e vinculação acadêmica (`PATCH /api/auth/perfil`).
+  * Permite ajuste de nome e vinculação escolar (`PATCH /api/auth/perfil`).
 
-### 3.2. Módulo de Gestão Escolar e Acadêmica (`SchoolModule`)
-* **Estrutura Acadêmica Normalizada:**
+### 3.2. Módulo de Gestão Escolar (`SchoolModule`)
+* **Estrutura Escolar Normalizada:**
   * Catálogo de Cursos (`cursos`), Séries (`series`) e Turmas (`turmas`).
   * Fornecimento da árvore estrutural completa para selects dinâmicos do frontend (`GET /api/academic/structure`).
 * **Mural de Eventos (`eventos`):**
@@ -95,7 +95,7 @@ O sistema é dividido em três domínios funcionais coesos:
 ### 3.3. Módulo de Notificações e Segmentação (`NotificacoesModule`)
 * **Geração Automática de Alertas:**
   * Disparada sempre que novos eventos ou horários de aula são criados ou atualizados no sistema.
-* **Segmentação por Grupos Acadêmicos (`grupos_notificacao`):**
+* **Segmentação por Grupos Escolares (`grupos_notificacao`):**
   * Grupo `geral` (para toda a escola).
   * Grupos por curso (`curso:DS`, `curso:NUT`).
   * Grupos por série (`serie:1`, `serie:2`, `serie:3`).
@@ -118,7 +118,7 @@ O backend valida as permissões em nível de rota através do `PapeisGuard` e do
 | **Solicitar Troca de Senha** | `POST /api/auth/recuperacao/solicitacoes` | Sim | Sim | Sim | Sim |
 | **Redefinir Senha com Código**| `POST /api/auth/recuperacao/redefinir` | Sim | Sim | Sim | Sim |
 | **Aprovar Solicitações de Senha**| `GET`, `PATCH /api/auth/recuperacao/...` | Não | Não | Não | **Sim** |
-| **Consultar Estrutura Acadêmica**| `GET /api/academic/structure`, `/courses`, etc. | Sim | Sim | Sim | Sim |
+| **Consultar Estrutura Escolar**| `GET /api/academic/structure`, `/courses`, etc. | Sim | Sim | Sim | Sim |
 | **Consultar Eventos** | `GET /api/events` | Sim | Sim | Sim | Sim |
 | **Criar / Deletar Eventos** | `POST`, `DELETE /api/events` | Não | Não | **Sim** | **Sim** |
 | **Consultar Horários** | `GET /api/schedules` | Sim | Sim | Sim | Sim |
@@ -252,7 +252,7 @@ O banco de dados é versionado e idempotente por migrações em `backend/src/mig
 2. `1727200000001-CriarRecuperacaoSenha`: Criação da tabela de solicitações com status e tokens de recuperação.
 3. `1727200000002-AjustarRecuperacaoPorCodigo`: Evolução para fluxo administrativo por código de 6 dígitos expirable.
 4. `1727200000003-VincularAlunoCursoSerieTurma`: Criação das tabelas relacionais `cursos`, `series`, `turmas` e chaves estrangeiras em `usuarios`.
-5. `1727200000004-CriarNotificacoesPorGrupo`: Infraestrutura relacional de notificações segmentadas por grupo acadêmico com leitura independente por usuário.
+5. `1727200000004-CriarNotificacoesPorGrupo`: Infraestrutura relacional de notificações segmentadas por grupo escolar com leitura independente por usuário.
 
 ---
 
@@ -272,7 +272,7 @@ Todas as rotas são prefixadas por `/api`.
 
 ### Gestão Escolar & Estrutura (`/api`)
 * `GET /api/academic/structure` — Retorna cursos, séries e turmas agrupados.
-* `GET /api/courses`, `GET /api/grades`, `GET /api/classes` — Listagens individuais das entidades acadêmicas.
+* `GET /api/courses`, `GET /api/grades`, `GET /api/classes` — Listagens individuais das entidades escolares.
 * `GET /api/events` — Retorna os eventos ordenados por data.
 * `POST /api/events` — *(Prof/Admin)* Cadastra novo evento escolar.
 * `DELETE /api/events/:id` — *(Prof/Admin)* Exclui um evento escolar.
@@ -300,7 +300,7 @@ Todas as rotas são prefixadas por `/api`.
 * Autenticação completa sem depender de serviços externos proprietários (JWT + Bcrypt).
 * Controle de acesso baseado em papéis (RBAC) com decorators declarativos.
 * Modelagem estrita e normalizada de Cursos, Séries e Turmas.
-* Regra de isolamento acadêmico: filtragem dos dados de estudantes por sua turma cadastrada.
+* Regra de isolamento escolar: filtragem dos dados de estudantes por sua turma cadastrada.
 * Notificações reativas com histórico de leitura individualizado por usuário.
 * Dockerização total (API + PostgreSQL) com script de inicialização e seeds didáticos.
 

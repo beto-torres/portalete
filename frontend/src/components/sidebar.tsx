@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { CalendarDays, Clock3, GraduationCap, Images, LayoutDashboard, Lightbulb, LogOut, Settings2, UserCircle, X } from "lucide-react";
 import type { Role, View } from "@/types";
 import { Button } from "./ui";
@@ -13,7 +14,13 @@ export function Sidebar({ view, role, open, onNavigate, onClose, onLogout }: { v
   const roleLabel = role === "aluno" ? "Área do estudante" : role === "professor" ? "Área do professor" : "Gestão escolar";
   return <><div className={`fixed inset-0 z-30 bg-slate-950/70 lg:hidden ${open ? "block" : "hidden"}`} onClick={onClose}/>
     <aside className={`sidebar-shell fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/10 bg-panel/95 p-5 backdrop-blur-xl transition-transform lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
-      <div className="mb-9 flex items-center gap-3 px-2"><span className="grid size-11 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-neon"><GraduationCap/></span><div><strong>Portal ETE</strong><p className="text-xs text-slate-500">Sistema Escolar Digital</p></div><button className="ml-auto lg:hidden" onClick={onClose} aria-label="Fechar menu"><X/></button></div>
+      <div className="mb-9 flex items-center gap-3 px-2">
+        <Link href="/portal" onClick={onClose} aria-label="Portal ETE — ir para o início" className="flex min-w-0 items-center gap-3 rounded-xl">
+          <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-neon"><GraduationCap aria-hidden="true"/></span>
+          <div><strong>Portal ETE</strong><p className="text-xs text-slate-500">Sistema Escolar Digital</p></div>
+        </Link>
+        <button className="ml-auto lg:hidden" onClick={onClose} aria-label="Fechar menu"><X/></button>
+      </div>
       <p className="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-slate-600">{roleLabel}</p>
       <nav aria-label="Navegação principal" className="grid gap-1.5">{commonLinks.map(([id, label, Icon]) => <button key={id} onClick={() => onNavigate(id)} className={`nav-item ${view === id ? "active" : ""}`}><Icon size={20}/><span>{label}</span></button>)}
         {role === "aluno" && <button onClick={() => onNavigate("sugestoes")} className={`nav-item ${view === "sugestoes" ? "active" : ""}`}><Lightbulb size={20}/><span>Enviar sugestão</span></button>}

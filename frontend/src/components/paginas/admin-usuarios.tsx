@@ -223,7 +223,7 @@ export function AdminUsuarios() {
                   name="classGroupId"
                   defaultValue={editing?.classGroupId ?? ""}
                 >
-                  <option value="">Sem vínculo acadêmico</option>
+                  <option value="">Sem vínculo escolar</option>
                   {structure?.classGroups.map((group) => (
                     <option key={group.id} value={group.id}>
                       {group.name}

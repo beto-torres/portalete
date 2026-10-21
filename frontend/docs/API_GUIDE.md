@@ -31,7 +31,7 @@ A API deve validar o perfil em todas as operações. Ocultar um botão no fronte
 - `PATCH /api/users/:id` — altera esses campos; omitir `password` mantém a senha atual.
 - `DELETE /api/users/:id` — exclui a conta e seus registros dependentes de recuperação e leitura de notificações.
 
-Perfis aceitos: `admin`, `professor` e `aluno`. A turma determina o curso e a série; `classGroupId: null` remove o vínculo acadêmico. Perfis não estudantis não mantêm vínculo acadêmico. A API rejeita e-mails duplicados, turmas inexistentes, autoexclusão e rebaixamento do próprio administrador. O último administrador é preservado. As permissões de sessões existentes são consultadas no banco a cada requisição autenticada.
+Perfis aceitos: `admin`, `professor` e `aluno`. A turma determina o curso e a série; `classGroupId: null` remove o vínculo escolar. Perfis não estudantis não mantêm vínculo escolar. A API rejeita e-mails duplicados, turmas inexistentes, autoexclusão e rebaixamento do próprio administrador. O último administrador é preservado. As permissões de sessões existentes são consultadas no banco a cada requisição autenticada.
 
 Na interface: **Administração → Usuários**, com busca, filtro de perfil e paginação. Para executar os testes de regras de negócio e autorização: `cd backend`, `npm run build` e `node --test test/usuarios.test.cjs`. Esses testes usam repositórios simulados; a integração com PostgreSQL deve ser validada em ambiente com banco disponível.
 
