@@ -12,7 +12,6 @@ import {
 import type { Role } from "@/types";
 import { api } from "@/lib/api";
 import { Button, Field, Input, Panel, Select } from "./ui";
-import { ProjectFooter } from "./project-footer";
 
 type Mode = "login" | "register" | "forgot";
 
@@ -380,9 +379,27 @@ export function AuthScreen({
             </>
           )}
         </p>
+        {mode === "login" && (
+          <div className="mt-6 border-t border-white/10 pt-5 text-center">
+            <a
+              href="https://portalete.vercel.app/"
+              aria-label="Acessar o Portal ETE"
+              className="inline-block rounded-lg bg-white p-2"
+            >
+              <img
+                src="/portalete-qrcode.svg"
+                width={132}
+                height={132}
+                alt="QR Code para https://portalete.vercel.app/"
+              />
+            </a>
+            <p className="mt-2 text-xs text-slate-400">
+              Escaneie para acessar o portal no celular
+            </p>
+          </div>
+        )}
       </Panel>
     </main>
-    <ProjectFooter />
     </>
   );
 }
