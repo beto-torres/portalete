@@ -81,11 +81,11 @@ select option:disabled { color: rgb(100 116 139); }
   cursor: pointer;
 }
 @media (hover: hover) {
-  :is(button, a[href], [role="button"]):not(.footer-link):not(:disabled):not([aria-disabled="true"]):hover {
+  :is(button, a[href], [role="button"]):not(.footer-link):not(.logo-link):not(:disabled):not([aria-disabled="true"]):hover {
     outline: 2px solid rgb(var(--interaction-outline) / .75);
     outline-offset: 2px;
   }
-  a[href]:not(.footer-link):not([aria-disabled="true"]):hover {
+  a[href]:not(.footer-link):not(.logo-link):not([aria-disabled="true"]):hover {
     text-decoration: underline;
     text-underline-offset: 4px;
   }
