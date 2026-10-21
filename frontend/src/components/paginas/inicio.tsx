@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { classes } from "@/lib/data";
+import { obterPrimeiroNome } from "@/lib/nome-usuario";
 import {
   alunoPodeAcessarEvento,
   alunoPodeAcessarHorario,
@@ -60,7 +61,7 @@ export function PaginaInicio({
           badge: alunoTurma
             ? `Estudante — Turma ${alunoTurma.nomeCompleto}`
             : "Painel do estudante",
-          title: `Olá, ${user.name}!`,
+          title: `Olá, ${obterPrimeiroNome(user.name)}!`,
           text: alunoTurma
             ? `Rotina e avisos exclusivos da sua turma: ${alunoTurma.nomeCompleto} (${alunoTurma.cursoNome}).`
             : "Consulte sua rotina escolar e acompanhe as próximas atividades.",
@@ -89,7 +90,7 @@ export function PaginaInicio({
       : user.role === "professor"
         ? {
             badge: "Painel do professor",
-            title: `Bom trabalho, ${user.name}!`,
+            title: `Bom trabalho, ${obterPrimeiroNome(user.name)}!`,
             text: "Acompanhe a agenda escolar e publique eventos para suas turmas.",
             actions: [
               ["horarios", "Consultar horários", "Veja turmas e aulas", Clock3],
@@ -115,7 +116,7 @@ export function PaginaInicio({
           }
         : {
             badge: "Painel administrativo",
-            title: `Olá, ${user.name}!`,
+            title: `Olá, ${obterPrimeiroNome(user.name)}!`,
             text: "Acompanhe os dados do portal e acesse rapidamente as áreas de gestão.",
             actions: [
               [

@@ -5,6 +5,7 @@ import { Bell, CalendarDays, CheckCheck, Clock3, Menu, Moon, Search, Sun, X } fr
 import { useNotifications } from "@/hooks/use-notifications";
 import { useTheme } from "@/hooks/use-theme";
 import { roleNames } from "@/lib/data";
+import { obterPrimeiroNome } from "@/lib/nome-usuario";
 import type { User, View } from "@/types";
 
 const baseItems: Array<{ label: string; detail: string; view: View }> = [
@@ -104,7 +105,7 @@ export function PortalHeader({ user, onOpenMenu, onNavigate }: {
         </div>
         <button onClick={() => onNavigate("perfil")} className="ml-2 flex items-center gap-3 rounded-xl p-1.5 pr-3 text-left transition hover:bg-white/5">
           <span className="grid size-9 place-items-center rounded-lg bg-gradient-to-br from-primary to-accent font-bold text-white">{user.name[0]?.toUpperCase()}</span>
-          <span className="hidden sm:block"><strong className="block max-w-28 truncate text-sm capitalize">{user.name}</strong><small className="text-slate-500">{roleNames[user.role]}</small></span>
+          <span className="hidden sm:block"><strong className="block text-sm capitalize">{obterPrimeiroNome(user.name)}</strong><small className="text-slate-500">{roleNames[user.role]}</small></span>
         </button>
       </div>
     </header>
