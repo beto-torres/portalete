@@ -94,7 +94,7 @@ select option:disabled { color: rgb(100 116 139); }
   outline: 3px solid rgb(var(--interaction-outline));
   outline-offset: 3px;
 }
-:is(button, a[href], [role="button"]):not(.footer-link):not(:disabled):not([aria-disabled="true"]):active {
+:is(button, a[href], [role="button"]):not(.footer-link):not(.logo-link):not(:disabled):not([aria-disabled="true"]):active {
   outline: 3px solid rgb(var(--interaction-outline));
   outline-offset: 1px;
   filter: brightness(.9);
