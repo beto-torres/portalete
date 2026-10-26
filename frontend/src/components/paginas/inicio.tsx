@@ -199,7 +199,7 @@ export function PaginaInicio({
 function Countdowns({ countdowns }: { countdowns: Countdown[] }) {
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
-    const timer = window.setInterval(() => setNow(new Date()), 60_000);
+    const timer = window.setInterval(() => setNow(new Date()), 1_000);
     return () => window.clearInterval(timer);
   }, []);
   const active = countdowns.filter(
@@ -212,12 +212,13 @@ function Countdowns({ countdowns }: { countdowns: Countdown[] }) {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {active.map((c) => {
           const eventDate = new Date(`${c.date}T00:00:00`);
-          // UTC calendar dates keep the day count stable across daylight-saving changes.
-          const days = Math.max(0, Math.round((
-            Date.UTC(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate()) -
-            Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
-          ) / 86400000));
-          const progress = Math.round(Math.max(0, Math.min(1, (30 - days) / 30)) * 100);
+          const remainingMs = Math.max(0, eventDate.getTime() - now.getTime());
+          const totalSeconds = Math.ceil(remainingMs / 1_000);
+          const days = Math.floor(totalSeconds / 86_400);
+          const hours = Math.floor((totalSeconds % 86_400) / 3_600);
+          const minutes = Math.floor((totalSeconds % 3_600) / 60);
+          const seconds = totalSeconds % 60;
+          const progress = Math.floor(Math.max(0, Math.min(1, 1 - remainingMs / (30 * 86_400_000))) * 100);
           return (
             <Panel key={c.id} className="countdown-card overflow-hidden p-5">
               <div className="flex items-center gap-3">
@@ -226,26 +227,32 @@ function Countdowns({ countdowns }: { countdowns: Countdown[] }) {
                 </span>
                 <strong>{c.title}</strong>
               </div>
-              <div className="mt-5 flex items-end justify-between">
-                <span className="countdown-days text-4xl font-bold">
-                  {days}
-                </span>
-                <span className="pb-1 text-sm text-slate-400">
-                  dias restantes
-                </span>
+              <div className="mt-5 grid grid-cols-4 gap-2" role="timer" aria-label="Tempo restante">
+                {[
+                  { label: "dias", value: days },
+                  { label: "horas", value: hours },
+                  { label: "minutos", value: minutes },
+                  { label: "segundos", value: seconds },
+                ].map(({ label, value }) => (
+                  <div key={label} className="min-w-0 text-center">
+                    <span className="countdown-days block text-2xl font-bold tabular-nums sm:text-3xl">
+                      {String(value).padStart(2, "0")}
+                    </span>
+                    <span className="text-xs text-slate-400">{label}</span>
+                  </div>
+                ))}
               </div>
-              <div className="mt-4 flex justify-between gap-2 text-xs text-slate-400">
-                <span>Últimos 30 dias</span>
+              <div className="mt-4 text-right text-xs text-slate-400">
                 <span>{progress}%</span>
               </div>
               <div
                 className="countdown-track mt-2 h-2.5 rounded-full"
                 role="progressbar"
-                aria-label={`Contagem para ${c.title}: últimos 30 dias`}
+                aria-label={`Contagem para ${c.title}`}
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-valuenow={progress}
-                aria-valuetext={`${progress}%, ${days} dias restantes`}
+                aria-valuetext={`${progress}%, ${days} dias, ${hours} horas, ${minutes} minutos e ${seconds} segundos restantes`}
               >
                 <div className="countdown-progress h-full rounded-full transition-[width] duration-500" style={{ width: `${progress}%` }} />
               </div>
