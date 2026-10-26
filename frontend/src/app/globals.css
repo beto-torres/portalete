@@ -70,6 +70,14 @@ select option:disabled { color: rgb(100 116 139); }
 :root.light .profile-avatar { border-color: rgb(var(--panel)); }
 :root.light .calendar-panel .fc { --fc-border-color: rgba(15,23,42,.1); --fc-neutral-bg-color: rgba(15,23,42,.04); }
 
+.countdown-card { background-image: linear-gradient(125deg, rgb(var(--primary) / .16), transparent 55%, rgb(var(--accent) / .12)); border-color: rgb(var(--primary) / .3); }
+.countdown-icon { color: #c4b5fd; background: linear-gradient(135deg, rgb(var(--primary) / .35), rgb(var(--accent) / .2)); box-shadow: inset 0 0 0 1px rgb(var(--primary) / .3); }
+.countdown-days { color: #ddd6fe; }
+.countdown-track { background: rgb(148 163 184 / .18); }
+.countdown-progress { background: linear-gradient(90deg, #a78bfa 0%, #818cf8 45%, #22d3ee 100%); box-shadow: 0 0 14px rgb(var(--accent) / .3), 0 0 6px rgb(var(--primary) / .4); }
+:root.light .countdown-icon, :root.light .countdown-days { color: #6d28d9; }
+:root.light .countdown-progress { background: linear-gradient(90deg, #7c3aed 0%, #6366f1 45%, #0891b2 100%); }
+
 /* Feedback compartilhado por links, botões, menus e controles do calendário. */
 :root { --interaction-outline: 167 139 250; }
 :root.light { --interaction-outline: 109 40 217; }

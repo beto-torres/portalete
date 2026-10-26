@@ -24,6 +24,7 @@ import type {
   View,
 } from "@/types";
 import { Panel } from "../ui";
+import { useEffect, useState } from "react";
 
 export function PaginaInicio({
   user,
@@ -196,7 +197,11 @@ export function PaginaInicio({
 }
 
 function Countdowns({ countdowns }: { countdowns: Countdown[] }) {
-  const now = new Date();
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
   const active = countdowns.filter(
     (c) => c.active && new Date(`${c.date}T23:59:59`) >= now,
   );
@@ -206,31 +211,43 @@ function Countdowns({ countdowns }: { countdowns: Countdown[] }) {
       <h2 className="mb-4 text-lg font-semibold">Contagem regressiva</h2>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {active.map((c) => {
-          const days = Math.max(
-            0,
-            Math.ceil(
-              (new Date(`${c.date}T00:00:00`).getTime() - now.getTime()) /
-                86400000,
-            ),
-          );
+          const eventDate = new Date(`${c.date}T00:00:00`);
+          // UTC calendar dates keep the day count stable across daylight-saving changes.
+          const days = Math.max(0, Math.round((
+            Date.UTC(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate()) -
+            Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
+          ) / 86400000));
+          const progress = Math.round(Math.max(0, Math.min(1, (30 - days) / 30)) * 100);
           return (
-            <Panel key={c.id} className="overflow-hidden p-5">
+            <Panel key={c.id} className="countdown-card overflow-hidden p-5">
               <div className="flex items-center gap-3">
-                <span className="grid size-10 place-items-center rounded-xl bg-primary/15 text-primary">
+                <span className="countdown-icon grid size-10 place-items-center rounded-xl">
                   <Clock3 />
                 </span>
                 <strong>{c.title}</strong>
               </div>
               <div className="mt-5 flex items-end justify-between">
-                <span className="text-4xl font-bold text-violet-300">
+                <span className="countdown-days text-4xl font-bold">
                   {days}
                 </span>
                 <span className="pb-1 text-sm text-slate-400">
                   dias restantes
                 </span>
               </div>
-              <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10">
-                <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-primary to-accent" />
+              <div className="mt-4 flex justify-between gap-2 text-xs text-slate-400">
+                <span>Últimos 30 dias</span>
+                <span>{progress}%</span>
+              </div>
+              <div
+                className="countdown-track mt-2 h-2.5 rounded-full"
+                role="progressbar"
+                aria-label={`Contagem para ${c.title}: últimos 30 dias`}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={progress}
+                aria-valuetext={`${progress}%, ${days} dias restantes`}
+              >
+                <div className="countdown-progress h-full rounded-full transition-[width] duration-500" style={{ width: `${progress}%` }} />
               </div>
             </Panel>
           );
