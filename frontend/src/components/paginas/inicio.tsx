@@ -242,11 +242,8 @@ function Countdowns({ countdowns }: { countdowns: Countdown[] }) {
                   </div>
                 ))}
               </div>
-              <div className="mt-4 text-right text-xs text-slate-400">
-                <span>{progress}%</span>
-              </div>
               <div
-                className="countdown-track mt-2 h-2.5 rounded-full"
+                className="countdown-track mt-4 h-2.5 rounded-full"
                 role="progressbar"
                 aria-label={`Contagem para ${c.title}`}
                 aria-valuemin={0}
